@@ -126,3 +126,25 @@ export const currency = (v: number) =>
   new Intl.NumberFormat("vi-VN", { notation: "compact", maximumFractionDigits: 1 }).format(v) + "₫";
 
 export const pct = (v: number) => `${v.toFixed(1)}%`;
+
+export type CampaignRow = {
+  id: string;
+  name: string;
+  state: "published" | "closed" | "draft";
+  snapshot: "updated" | "none";
+  bookings: string;
+  completionRate: number | null;
+  onTimeRate: number | null;
+  rating: number | null;
+  cost: number | null;
+};
+
+export const campaignRows: CampaignRow[] = [
+  { id: "k1", name: "Summer Glow Launch", state: "published", snapshot: "updated", bookings: "128/128", completionRate: 87.5, onTimeRate: 78.9, rating: 4.6, cost: 1_284_000_000 },
+  { id: "k2", name: "UGC mùa hè", state: "published", snapshot: "updated", bookings: "1/1", completionRate: 100, onTimeRate: 0, rating: 4.2, cost: 1_000_000 },
+  { id: "k3", name: "Thời trang nam", state: "published", snapshot: "updated", bookings: "0/1", completionRate: 0, onTimeRate: 100, rating: null, cost: 0 },
+  { id: "k4", name: "CP ví dụ", state: "closed", snapshot: "none", bookings: "N/A", completionRate: null, onTimeRate: null, rating: null, cost: null },
+];
+
+export const currencyFull = (v: number) =>
+  new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(v) + " ₫";
