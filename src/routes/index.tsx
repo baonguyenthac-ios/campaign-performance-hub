@@ -72,35 +72,41 @@ function PerformanceCampaign() {
 
   return (
     <main className="min-h-screen">
-      <div className="hero-glow border-b border-border">
+      <div className="hero-glow border-b border-border bg-surface/60">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-          <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                Performance Campaign
-              </p>
-              <h1 className="mt-2 truncate text-2xl font-bold sm:text-3xl lg:text-4xl">
-                {data?.campaign.name ?? "Chiến dịch"}
-              </h1>
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-                <span className="truncate">{data?.campaign.brand ?? "—"}</span>
-                <span aria-hidden>·</span>
-                <span className="inline-flex items-center gap-1">
-                  <CalendarClock className="size-3.5 shrink-0" />
-                  {data?.campaign.period ?? "—"}
-                </span>
-              </p>
+          <header className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+                  Báo cáo
+                </p>
+                <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                  Hiệu suất chiến dịch
+                </h1>
+                <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+                  Số liệu được cập nhật tự động từ booking, nội dung, thanh toán, tranh chấp và đánh
+                  giá.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                className="h-10 shrink-0 rounded-xl bg-surface"
+                onClick={() => query.refetch()}
+              >
+                <RefreshCw className={cn("size-4", query.isFetching && "animate-spin")} /> Làm mới
+              </Button>
             </div>
-            <div className="flex shrink-0 flex-col items-end gap-2">
-              <div className="flex flex-wrap gap-1 rounded-full border border-border bg-surface p-1">
+
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-border bg-surface p-1">
                 {states.map((s) => (
                   <button
                     key={s.key}
                     onClick={() => setState(s.key)}
                     className={cn(
-                      "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
                       state === s.key
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-primary text-primary-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >
@@ -108,17 +114,24 @@ function PerformanceCampaign() {
                   </button>
                 ))}
               </div>
-              <DataStatus
-                loading={query.isPending}
-                error={query.isError}
-                empty={isEmpty}
-                coverage={data?.campaign.dataCoverage ?? 0}
-                syncedAt={data?.campaign.lastSyncedAt ?? "—"}
-              />
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <CalendarClock className="size-3.5 shrink-0" />
+                  {data?.campaign.name ?? "—"} · {data?.campaign.period ?? "—"}
+                </span>
+                <DataStatus
+                  loading={query.isPending}
+                  error={query.isError}
+                  empty={isEmpty}
+                  coverage={data?.campaign.dataCoverage ?? 0}
+                  syncedAt={data?.campaign.lastSyncedAt ?? "—"}
+                />
+              </div>
             </div>
           </header>
         </div>
       </div>
+
 
       <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         {query.isPending ? (
