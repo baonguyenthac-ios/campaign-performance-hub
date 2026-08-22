@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MetricCard } from "@/components/campaign/MetricCard";
 import { CreatorTable } from "@/components/campaign/CreatorTable";
+import { CampaignList } from "@/components/campaign/CampaignList";
 import {
   currency,
   fetchCampaignPerformance,
