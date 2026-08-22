@@ -116,17 +116,17 @@ export async function fetchCampaignPerformance(
   const base: CampaignPerformance = row
     ? { ...data, campaign: { ...data.campaign, name: row.name } }
     : data;
-
+  if (state === "empty") {
     return {
-      ...data,
-      campaign: { ...data.campaign, dataCoverage: 0 },
+      ...base,
+      campaign: { ...base.campaign, dataCoverage: 0 },
       overview: { bookings: 0, bookingsDelta: 0, completionRate: 0, onTimeRate: 0, firstApprovalRate: 0, rating: 0, ratingCount: 0, paidCost: 0, budget: data.overview.budget },
       content: { delivered: 0, posted: 0, pendingReview: 0, revisions: 0, revisionRate: 0 },
       qualityAlerts: [],
       creators: [],
     };
   }
-  return data;
+  return base;
 }
 
 export const currency = (v: number) =>
