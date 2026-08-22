@@ -106,10 +106,17 @@ const data: CampaignPerformance = {
   ],
 };
 
-export async function fetchCampaignPerformance(state: DataState): Promise<CampaignPerformance> {
+export async function fetchCampaignPerformance(
+  state: DataState,
+  id?: string,
+): Promise<CampaignPerformance> {
   await new Promise((r) => setTimeout(r, state === "loading" ? 100000 : 450));
   if (state === "error") throw new Error("Không thể tải dữ liệu hiệu suất chiến dịch (503).");
-  if (state === "empty") {
+  const row = id ? campaignRows.find((c) => c.id === id) : undefined;
+  const base: CampaignPerformance = row
+    ? { ...data, campaign: { ...data.campaign, name: row.name } }
+    : data;
+
     return {
       ...data,
       campaign: { ...data.campaign, dataCoverage: 0 },
