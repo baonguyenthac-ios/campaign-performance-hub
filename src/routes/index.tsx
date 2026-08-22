@@ -276,7 +276,10 @@ function PerformanceCampaign() {
                 </div>
               </section>
 
+              <CampaignList />
+
               <CreatorTable rows={data.creators} />
+
             </>
           )
         )}
