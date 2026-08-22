@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronRight, Search } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
