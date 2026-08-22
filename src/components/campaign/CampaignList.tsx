@@ -129,10 +129,15 @@ export function CampaignList() {
                       <td className="px-4 py-4">{na(r.rating, (n) => n.toFixed(1))}</td>
                       <td className="px-4 py-4">{na(r.cost, currencyFull)}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-transform group-hover:translate-x-0.5">
+                        <Link
+                          to="/campaign/$id"
+                          params={{ id: r.id }}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-transform group-hover:translate-x-0.5"
+                        >
                           Xem chi tiết <ChevronRight className="size-4" />
-                        </button>
+                        </Link>
                       </td>
+
                     </tr>
                   ))}
                 </tbody>
