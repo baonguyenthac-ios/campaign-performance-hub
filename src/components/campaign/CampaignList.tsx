@@ -69,24 +69,34 @@ export function CampaignList() {
             {/* Mobile */}
             <ul className="divide-y divide-border md:hidden">
               {rows.map((r) => (
-                <li key={r.id} className="space-y-3 p-4">
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold">{r.name}</p>
-                      <p className="text-xs text-muted-foreground">{stateLabel[r.state]}</p>
+                <li key={r.id}>
+                  <Link
+                    to="/campaign/$id"
+                    params={{ id: r.id }}
+                    className="block space-y-3 p-4 transition-colors active:bg-surface-2"
+                  >
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">{stateLabel[r.state]}</p>
+                      </div>
+                      <SnapshotBadge snapshot={r.snapshot} />
                     </div>
-                    <SnapshotBadge snapshot={r.snapshot} />
-                  </div>
-                  <dl className="grid grid-cols-3 gap-3 text-sm">
-                    <Cell label="Booking">{r.bookings}</Cell>
-                    <Cell label="Hoàn thành">{na(r.completionRate, (n) => pct(n))}</Cell>
-                    <Cell label="Đúng hạn">{na(r.onTimeRate, (n) => pct(n))}</Cell>
-                    <Cell label="Đánh giá">{na(r.rating, (n) => n.toFixed(1))}</Cell>
-                    <Cell label="Chi phí">{na(r.cost, currencyFull)}</Cell>
-                  </dl>
+                    <dl className="grid grid-cols-3 gap-3 text-sm">
+                      <Cell label="Booking">{r.bookings}</Cell>
+                      <Cell label="Hoàn thành">{na(r.completionRate, (n) => pct(n))}</Cell>
+                      <Cell label="Đúng hạn">{na(r.onTimeRate, (n) => pct(n))}</Cell>
+                      <Cell label="Đánh giá">{na(r.rating, (n) => n.toFixed(1))}</Cell>
+                      <Cell label="Chi phí">{na(r.cost, currencyFull)}</Cell>
+                    </dl>
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                      Xem chi tiết <ChevronRight className="size-4" />
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
+
 
             {/* Tablet + desktop */}
             <div className="hidden overflow-x-auto md:block">
