@@ -106,20 +106,27 @@ const data: CampaignPerformance = {
   ],
 };
 
-export async function fetchCampaignPerformance(state: DataState): Promise<CampaignPerformance> {
+export async function fetchCampaignPerformance(
+  state: DataState,
+  id?: string,
+): Promise<CampaignPerformance> {
   await new Promise((r) => setTimeout(r, state === "loading" ? 100000 : 450));
   if (state === "error") throw new Error("Không thể tải dữ liệu hiệu suất chiến dịch (503).");
+  const row = id ? campaignRows.find((c) => c.id === id) : undefined;
+  const base: CampaignPerformance = row
+    ? { ...data, campaign: { ...data.campaign, name: row.name } }
+    : data;
   if (state === "empty") {
     return {
-      ...data,
-      campaign: { ...data.campaign, dataCoverage: 0 },
+      ...base,
+      campaign: { ...base.campaign, dataCoverage: 0 },
       overview: { bookings: 0, bookingsDelta: 0, completionRate: 0, onTimeRate: 0, firstApprovalRate: 0, rating: 0, ratingCount: 0, paidCost: 0, budget: data.overview.budget },
       content: { delivered: 0, posted: 0, pendingReview: 0, revisions: 0, revisionRate: 0 },
       qualityAlerts: [],
       creators: [],
     };
   }
-  return data;
+  return base;
 }
 
 export const currency = (v: number) =>

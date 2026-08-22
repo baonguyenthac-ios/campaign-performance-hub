@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronRight, Search } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -67,24 +69,34 @@ export function CampaignList() {
             {/* Mobile */}
             <ul className="divide-y divide-border md:hidden">
               {rows.map((r) => (
-                <li key={r.id} className="space-y-3 p-4">
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold">{r.name}</p>
-                      <p className="text-xs text-muted-foreground">{stateLabel[r.state]}</p>
+                <li key={r.id}>
+                  <Link
+                    to="/campaign/$id"
+                    params={{ id: r.id }}
+                    className="block space-y-3 p-4 transition-colors active:bg-surface-2"
+                  >
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">{stateLabel[r.state]}</p>
+                      </div>
+                      <SnapshotBadge snapshot={r.snapshot} />
                     </div>
-                    <SnapshotBadge snapshot={r.snapshot} />
-                  </div>
-                  <dl className="grid grid-cols-3 gap-3 text-sm">
-                    <Cell label="Booking">{r.bookings}</Cell>
-                    <Cell label="Hoàn thành">{na(r.completionRate, (n) => pct(n))}</Cell>
-                    <Cell label="Đúng hạn">{na(r.onTimeRate, (n) => pct(n))}</Cell>
-                    <Cell label="Đánh giá">{na(r.rating, (n) => n.toFixed(1))}</Cell>
-                    <Cell label="Chi phí">{na(r.cost, currencyFull)}</Cell>
-                  </dl>
+                    <dl className="grid grid-cols-3 gap-3 text-sm">
+                      <Cell label="Booking">{r.bookings}</Cell>
+                      <Cell label="Hoàn thành">{na(r.completionRate, (n) => pct(n))}</Cell>
+                      <Cell label="Đúng hạn">{na(r.onTimeRate, (n) => pct(n))}</Cell>
+                      <Cell label="Đánh giá">{na(r.rating, (n) => n.toFixed(1))}</Cell>
+                      <Cell label="Chi phí">{na(r.cost, currencyFull)}</Cell>
+                    </dl>
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                      Xem chi tiết <ChevronRight className="size-4" />
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
+
 
             {/* Tablet + desktop */}
             <div className="hidden overflow-x-auto md:block">
@@ -117,10 +129,15 @@ export function CampaignList() {
                       <td className="px-4 py-4">{na(r.rating, (n) => n.toFixed(1))}</td>
                       <td className="px-4 py-4">{na(r.cost, currencyFull)}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-transform group-hover:translate-x-0.5">
+                        <Link
+                          to="/campaign/$id"
+                          params={{ id: r.id }}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-transform group-hover:translate-x-0.5"
+                        >
                           Xem chi tiết <ChevronRight className="size-4" />
-                        </button>
+                        </Link>
                       </td>
+
                     </tr>
                   ))}
                 </tbody>
