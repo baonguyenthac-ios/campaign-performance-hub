@@ -240,7 +240,7 @@ function CropSlider({
   return (
     <div className="flex items-center gap-4">
       <span className="w-20 shrink-0 text-xs font-semibold text-muted-foreground">{label}</span>
-      <Slider value={[value]} min={min} max={max} step={1} onValueChange={([v]) => onChange(v)} />
+      <Slider value={[value]} min={min} max={max} step={1} onValueChange={(v) => onChange(v[0] ?? value)} />
     </div>
   );
 }
