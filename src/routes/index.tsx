@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CircleDollarSign, LayoutList, Star, Trophy } from "lucide-react";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { CircleDollarSign, LayoutList, Plus, Star, Trophy } from "lucide-react";
 
 import { MetricCard } from "@/components/campaign/MetricCard";
 import { CampaignList } from "@/components/campaign/CampaignList";
