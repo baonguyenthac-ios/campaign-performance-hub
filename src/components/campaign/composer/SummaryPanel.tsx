@@ -28,7 +28,7 @@ export function SummaryPanel({
 }: {
   draft: DraftInput;
   errors: Errors;
-  className?: string;
+  className?: string | undefined;
 }) {
   const done = CHECKLIST.filter((c) => !errors[c.key]).length;
 

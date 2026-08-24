@@ -10,7 +10,7 @@ import { MAX_COVER_BYTES, validateCoverFile } from "@/lib/campaign-composer";
 type Props = {
   value: string | null;
   fileName: string | null;
-  error?: string;
+  error?: string | undefined;
   onChange: (dataUrl: string | null, fileName: string | null) => void;
 };
 
