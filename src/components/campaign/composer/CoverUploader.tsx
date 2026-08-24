@@ -10,7 +10,7 @@ import { MAX_COVER_BYTES, validateCoverFile } from "@/lib/campaign-composer";
 type Props = {
   value: string | null;
   fileName: string | null;
-  error?: string;
+  error?: string | undefined;
   onChange: (dataUrl: string | null, fileName: string | null) => void;
 };
 
@@ -95,7 +95,7 @@ export function CoverUploader({ value, fileName, error, onChange }: Props) {
       />
 
       {value ? (
-        <div className="overflow-hidden rounded-[22px] border border-border bg-surface-2">
+        <div className="max-w-xl overflow-hidden rounded-[22px] border border-border bg-surface-2">
           <div className="relative aspect-[4/3] w-full">
             <img src={value} alt="Ảnh bìa chiến dịch" className="size-full object-cover" />
             <span className="absolute left-3 top-3 rounded-full bg-success px-2.5 py-1 text-[11px] font-bold text-success-foreground">
@@ -140,7 +140,7 @@ export function CoverUploader({ value, fileName, error, onChange }: Props) {
             if (file) readFile(file);
           }}
           className={cn(
-            "flex aspect-[4/3] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-[22px] border-2 border-dashed border-input bg-surface-2 px-6 text-center transition-colors",
+            "flex aspect-[4/3] w-full max-w-xl cursor-pointer flex-col items-center justify-center gap-3 rounded-[22px] border-2 border-dashed border-input bg-surface-2 px-6 text-center transition-colors",
             "hover:border-primary/60 hover:bg-primary/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             dragging && "border-primary bg-primary/[0.06]",
             (error || localError) && "border-destructive/60",

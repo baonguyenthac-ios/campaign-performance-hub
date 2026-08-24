@@ -11,7 +11,7 @@ export function ChipMultiSelect<T extends string>({
   options: Array<{ id: T; label: string }>;
   value: T[];
   onChange: (next: T[]) => void;
-  invalid?: boolean;
+  invalid?: boolean | undefined;
 }) {
   const toggle = (id: T) =>
     onChange(value.includes(id) ? value.filter((v) => v !== id) : [...value, id]);

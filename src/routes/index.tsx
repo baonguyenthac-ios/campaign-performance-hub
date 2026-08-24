@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CircleDollarSign, LayoutList, Star, Trophy } from "lucide-react";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { CircleDollarSign, LayoutList, Plus, Star, Trophy } from "lucide-react";
 
 import { MetricCard } from "@/components/campaign/MetricCard";
 import { CampaignList } from "@/components/campaign/CampaignList";
@@ -37,17 +37,27 @@ function CampaignPerformanceList() {
   return (
     <main className="min-h-screen">
       <div className="hero-glow border-b border-border bg-surface/60">
-        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">Báo cáo</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Hiệu suất chiến dịch
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Tổng hợp toàn bộ chiến dịch. Bấm “Xem chi tiết” để mở báo cáo hiệu suất của từng nhà sáng
-            tạo trong chiến dịch.
-          </p>
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-start gap-4 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">Báo cáo</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              Hiệu suất chiến dịch
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Tổng hợp toàn bộ chiến dịch. Bấm “Xem chi tiết” để mở báo cáo hiệu suất của từng nhà
+              sáng tạo trong chiến dịch.
+            </p>
+          </div>
+          <Link
+            to="/campaign/new"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 sm:px-5"
+          >
+            <Plus className="size-4" />
+            <span className="hidden sm:inline">Tạo chiến dịch</span>
+          </Link>
         </div>
       </div>
+
 
       <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

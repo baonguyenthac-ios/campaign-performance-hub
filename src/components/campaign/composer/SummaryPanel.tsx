@@ -28,7 +28,7 @@ export function SummaryPanel({
 }: {
   draft: DraftInput;
   errors: Errors;
-  className?: string;
+  className?: string | undefined;
 }) {
   const done = CHECKLIST.filter((c) => !errors[c.key]).length;
 
@@ -128,7 +128,7 @@ function Row({ icon, label, value }: { icon: React.ReactNode; label: string; val
         <span className="shrink-0 text-primary">{icon}</span>
         <span className="truncate">{label}</span>
       </dt>
-      <dd className="num max-w-[55%] truncate text-right font-bold">{value}</dd>
+      <dd className="num min-w-0 truncate text-right font-bold">{value}</dd>
     </div>
   );
 }

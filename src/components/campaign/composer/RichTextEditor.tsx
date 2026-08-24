@@ -21,8 +21,8 @@ export function RichTextEditor({
   id: string;
   value: string;
   onChange: (html: string) => void;
-  invalid?: boolean;
-  placeholder?: string;
+  invalid?: boolean | undefined;
+  placeholder?: string | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 

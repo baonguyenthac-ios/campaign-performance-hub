@@ -16,11 +16,11 @@ export function FormField({
   id: string;
   label: string;
   required?: boolean;
-  hint?: ReactNode;
-  error?: string;
+  hint?: ReactNode | undefined;
+  error?: string | undefined;
   children: ReactNode;
-  count?: { current: number; max: number };
-  className?: string;
+  count?: { current: number; max: number } | undefined;
+  className?: string | undefined;
 }) {
   return (
     <div data-field={id} className={cn("scroll-mt-28", className)}>
@@ -62,9 +62,9 @@ export function SectionCard({
   aside,
 }: {
   title: string;
-  description?: string;
+  description?: string | undefined;
   children: ReactNode;
-  aside?: ReactNode;
+  aside?: ReactNode | undefined;
 }) {
   return (
     <section className="panel p-5 sm:p-6 lg:p-7">
