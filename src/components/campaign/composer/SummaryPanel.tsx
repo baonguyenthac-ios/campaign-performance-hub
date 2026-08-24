@@ -34,7 +34,7 @@ export function SummaryPanel({
 
   return (
     <div className={cn("panel overflow-hidden", className)}>
-      <div className="relative aspect-[16/10] w-full bg-surface-2">
+      <div className="relative aspect-[4/3] w-full bg-surface-2">
         {draft.coverDataUrl ? (
           <img src={draft.coverDataUrl} alt="" className="size-full object-cover" />
         ) : (
