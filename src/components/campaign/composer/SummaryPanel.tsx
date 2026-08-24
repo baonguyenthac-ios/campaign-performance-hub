@@ -34,7 +34,7 @@ export function SummaryPanel({
 
   return (
     <div className={cn("panel overflow-hidden", className)}>
-      <div className="relative aspect-[4/3] w-full bg-surface-2">
+      <div className="relative aspect-[16/10] w-full bg-surface-2">
         {draft.coverDataUrl ? (
           <img src={draft.coverDataUrl} alt="" className="size-full object-cover" />
         ) : (
@@ -128,7 +128,7 @@ function Row({ icon, label, value }: { icon: React.ReactNode; label: string; val
         <span className="shrink-0 text-primary">{icon}</span>
         <span className="truncate">{label}</span>
       </dt>
-      <dd className="num max-w-[55%] truncate text-right font-bold">{value}</dd>
+      <dd className="num min-w-0 truncate text-right font-bold">{value}</dd>
     </div>
   );
 }
