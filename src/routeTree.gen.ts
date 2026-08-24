@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
+import { Route as CampaignNewRouteImport } from './routes/campaign.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const CampaignIdRoute = CampaignIdRouteImport.update({
   path: '/campaign/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampaignNewRoute = CampaignNewRouteImport.update({
+  id: '/campaign/new',
+  path: '/campaign/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/new': typeof CampaignNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/new': typeof CampaignNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/new': typeof CampaignNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/campaign/$id'
+  fullPaths: '/' | '/campaign/$id' | '/campaign/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/campaign/$id'
-  id: '__root__' | '/' | '/campaign/$id'
+  to: '/' | '/campaign/$id' | '/campaign/new'
+  id: '__root__' | '/' | '/campaign/$id' | '/campaign/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CampaignIdRoute: typeof CampaignIdRoute
+  CampaignNewRoute: typeof CampaignNewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaign/new': {
+      id: '/campaign/new'
+      path: '/campaign/new'
+      fullPath: '/campaign/new'
+      preLoaderRoute: typeof CampaignNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignIdRoute: CampaignIdRoute,
+  CampaignNewRoute: CampaignNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
