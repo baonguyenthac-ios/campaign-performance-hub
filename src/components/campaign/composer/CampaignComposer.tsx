@@ -335,8 +335,17 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               ) : null}
             </div>
           </div>
+          <div className="mt-6">
+            <Stepper
+              steps={STEPS.map((s) => ({ id: s.id, label: s.label }))}
+              current={step}
+              completed={stepCompleted}
+              onSelect={goTo}
+            />
+          </div>
         </div>
       </div>
+
 
       <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-8">
         <form ref={formRef} onSubmit={submit} noValidate className="space-y-6">
