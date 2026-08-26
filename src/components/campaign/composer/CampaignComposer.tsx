@@ -62,6 +62,7 @@ import {
   type CampaignDraft,
   type DraftInput,
   type Errors,
+  type FieldKey,
   type Platform,
 } from "@/lib/campaign-composer";
 import { CoverUploader } from "./CoverUploader";
