@@ -649,8 +649,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
                   />
                 </FormField>
               </div>
-            ) : null}
-          </section>
+            </SectionCard>
+          ) : null}
+
 
           {/* Desktop actions */}
           <div className="hidden items-center justify-between gap-3 lg:flex">
