@@ -69,6 +69,38 @@ import { ChipMultiSelect } from "./ChipMultiSelect";
 import { TagInput } from "./TagInput";
 import { SummaryPanel } from "./SummaryPanel";
 import { FormField, SectionCard } from "./FormField";
+import { Stepper } from "./Stepper";
+
+const STEPS: Array<{ id: string; label: string; title: string; hint: string; fields: FieldKey[] }> = [
+  {
+    id: "basics",
+    label: "Cơ bản",
+    title: "Thông tin cơ bản",
+    hint: "Ảnh bìa, tên, ngành hàng, nền tảng và hạn nhận hồ sơ.",
+    fields: ["coverDataUrl", "name", "category", "deadline", "platforms"],
+  },
+  {
+    id: "budget",
+    label: "Ngân sách",
+    title: "Ngân sách & quy mô",
+    hint: "Chi phí và số creator bạn muốn tuyển.",
+    fields: ["budget", "creatorCount"],
+  },
+  {
+    id: "content",
+    label: "Nội dung",
+    title: "Nội dung & mô tả",
+    hint: "Bàn giao gì và mô tả chiến dịch.",
+    fields: ["deliverySummary", "description"],
+  },
+  {
+    id: "extras",
+    label: "Nâng cao",
+    title: "Yêu cầu nâng cao",
+    hint: "Không bắt buộc — nhưng giúp lọc creator tốt hơn.",
+    fields: ["minFollowers", "region", "creatorRequirements", "contentGuidelines"],
+  },
+];
 
 export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; draftId?: string }) {
   const navigate = useNavigate();
@@ -79,8 +111,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [publishedDraft, setPublishedDraft] = useState<CampaignDraft | null>(null);
-  const [advancedOpen, setAdvancedOpen] = useState(mode === "edit");
+  const [step, setStep] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+
 
   const sessionQuery = useQuery({ queryKey: ["brand-session"], queryFn: fetchSession });
   const draftQuery = useQuery({
