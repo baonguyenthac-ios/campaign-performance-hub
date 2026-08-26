@@ -192,6 +192,40 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
     saveMutation.mutate();
   };
 
+  const stepCompleted = STEPS.map((s) => s.fields.every((f) => !liveErrors[f]));
+  const isLastStep = step === STEPS.length - 1;
+
+  const goTo = (i: number) => {
+    setStep(Math.min(Math.max(i, 0), STEPS.length - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const next = () => {
+    const stepErrs: Errors = {};
+    for (const f of STEPS[step]!.fields) if (liveErrors[f]) stepErrs[f] = liveErrors[f];
+    if (Object.keys(stepErrs).length) {
+      setSubmitted(true);
+      setErrors(liveErrors);
+      toast.error("Vui lòng hoàn tất bước này trước khi tiếp tục");
+      focusFirstError(stepErrs);
+      return;
+    }
+    goTo(step + 1);
+  };
+
+  const tryPublish = () => {
+    setSubmitted(true);
+    setErrors(liveErrors);
+    if (Object.keys(liveErrors).length) {
+      toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
+      const firstBad = STEPS.findIndex((s) => s.fields.some((f) => liveErrors[f]));
+      if (firstBad >= 0) setStep(firstBad);
+      focusFirstError(liveErrors);
+      return;
+    }
+    setConfirmOpen(true);
+  };
+
   // ---------------------------------------------------------------- states
   if (sessionQuery.isLoading || (mode === "edit" && draftQuery.isLoading)) {
     return <ComposerSkeleton />;
