@@ -309,10 +309,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
                 {mode === "create" ? "Tạo chiến dịch" : "Chỉnh sửa chiến dịch"}
               </h1>
               <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
-                {mode === "create"
-                  ? "Điền thông tin cơ bản để tạo bản nháp. Bạn có thể chỉnh sửa và xuất bản sau."
-                  : "Kiểm tra lại nội dung, lưu thay đổi và xuất bản khi chiến dịch đã sẵn sàng."}
+                {STEPS[step]!.hint}
               </p>
+
             </div>
             <div className="shrink-0 text-right">
               {savedAt ? (
