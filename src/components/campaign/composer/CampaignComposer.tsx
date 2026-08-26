@@ -536,29 +536,13 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </FormField>
           </SectionCard>
 
-          <section className="panel overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setAdvancedOpen((o) => !o)}
-              className="flex w-full items-center justify-between gap-3 p-5 text-left sm:p-6"
+          {step === 3 ? (
+            <SectionCard
+              title="Yêu cầu nâng cao"
+              description="Không bắt buộc — nhưng giúp bạn lọc creator phù hợp hơn."
             >
-              <span className="min-w-0">
-                <span className="block text-lg font-bold tracking-tight sm:text-xl">
-                  Yêu cầu nâng cao{" "}
-                  <span className="align-middle text-xs font-semibold text-muted-foreground">
-                    (không bắt buộc)
-                  </span>
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  Follower tối thiểu, khu vực, tags, dos & don’ts
-                </span>
-              </span>
-              <ChevronDown
-                className={cn("size-5 shrink-0 transition-transform", advancedOpen && "rotate-180")}
-              />
-            </button>
-            {advancedOpen ? (
-              <div className="space-y-5 border-t border-border p-5 sm:p-6">
+              <div className="space-y-5">
+
                 <div className="grid gap-5 sm:grid-cols-2">
                   <FormField
                     id="minFollowers"
