@@ -654,41 +654,52 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
 
           {/* Desktop actions */}
           <div className="hidden items-center justify-between gap-3 lg:flex">
-            <p className="text-xs text-muted-foreground">
-              {savedAt
-                ? `Cập nhật lần cuối ${new Date(savedAt).toLocaleString("vi-VN")}`
-                : "Bản nháp chưa được lưu"}
-            </p>
-            <div className="flex gap-2">
-              {mode === "edit" ? (
-                <PublishButton
-                  disabled={!canPublish || busy}
-                  loading={isPublishing}
-                  locked={!canPublish}
-                  onClick={() => {
-                    setSubmitted(true);
-                    setErrors(liveErrors);
-                    if (Object.keys(liveErrors).length) {
-                      toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
-                      focusFirstError(liveErrors);
-                      return;
-                    }
-                    setConfirmOpen(true);
-                  }}
-                />
+            <div className="flex items-center gap-3">
+              {step > 0 ? (
+                <Button type="button" variant="ghost" onClick={() => goTo(step - 1)}>
+                  <ArrowLeft className="size-4" /> Quay lại
+                </Button>
               ) : null}
-              <Button type="submit" size="lg" disabled={busy} className="min-w-44">
-                {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                {isSaving
-                  ? mode === "create"
-                    ? "Đang tạo…"
-                    : "Đang lưu…"
-                  : mode === "create"
-                    ? "Tạo chiến dịch"
-                    : "Lưu thay đổi"}
-              </Button>
+              <p className="text-xs text-muted-foreground">
+                {savedAt
+                  ? `Cập nhật lần cuối ${new Date(savedAt).toLocaleString("vi-VN")}`
+                  : "Bản nháp chưa được lưu"}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              {isLastStep ? (
+                <>
+                  {mode === "edit" ? (
+                    <PublishButton
+                      disabled={!canPublish || busy}
+                      loading={isPublishing}
+                      locked={!canPublish}
+                      onClick={tryPublish}
+                    />
+                  ) : null}
+                  <Button type="submit" size="lg" disabled={busy} className="min-w-44">
+                    {isSaving ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Save className="size-4" />
+                    )}
+                    {isSaving
+                      ? mode === "create"
+                        ? "Đang tạo…"
+                        : "Đang lưu…"
+                      : mode === "create"
+                        ? "Tạo chiến dịch"
+                        : "Lưu thay đổi"}
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" size="lg" onClick={next} className="min-w-44">
+                  Tiếp tục <ArrowRight className="size-4" />
+                </Button>
+              )}
             </div>
           </div>
+
         </form>
 
         <aside className="hidden lg:block">
