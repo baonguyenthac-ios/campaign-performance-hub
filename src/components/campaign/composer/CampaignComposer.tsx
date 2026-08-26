@@ -449,6 +449,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               />
             </FormField>
           </SectionCard>
+          ) : null}
 
           {step === 1 ? (
           <SectionCard title="Ngân sách & quy mô" description="Xác định chi phí và số lượng creator cần tuyển.">
