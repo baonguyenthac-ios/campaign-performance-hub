@@ -347,6 +347,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </div>
           ) : null}
 
+          {step === 0 ? (
           <SectionCard title="Ảnh bìa & thông tin cơ bản" description="Những thông tin creator nhìn thấy đầu tiên trên Discovery.">
             <FormField
               id="coverDataUrl"
