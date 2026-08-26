@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   ArrowLeft,
+  ArrowRight,
   BadgeCheck,
   CheckCircle2,
   ChevronDown,
@@ -61,6 +62,7 @@ import {
   type CampaignDraft,
   type DraftInput,
   type Errors,
+  type FieldKey,
   type Platform,
 } from "@/lib/campaign-composer";
 import { CoverUploader } from "./CoverUploader";
@@ -69,6 +71,38 @@ import { ChipMultiSelect } from "./ChipMultiSelect";
 import { TagInput } from "./TagInput";
 import { SummaryPanel } from "./SummaryPanel";
 import { FormField, SectionCard } from "./FormField";
+import { Stepper } from "./Stepper";
+
+const STEPS: Array<{ id: string; label: string; title: string; hint: string; fields: FieldKey[] }> = [
+  {
+    id: "basics",
+    label: "Cơ bản",
+    title: "Thông tin cơ bản",
+    hint: "Ảnh bìa, tên, ngành hàng, nền tảng và hạn nhận hồ sơ.",
+    fields: ["coverDataUrl", "name", "category", "deadline", "platforms"],
+  },
+  {
+    id: "budget",
+    label: "Ngân sách",
+    title: "Ngân sách & quy mô",
+    hint: "Chi phí và số creator bạn muốn tuyển.",
+    fields: ["budget", "creatorCount"],
+  },
+  {
+    id: "content",
+    label: "Nội dung",
+    title: "Nội dung & mô tả",
+    hint: "Bàn giao gì và mô tả chiến dịch.",
+    fields: ["deliverySummary", "description"],
+  },
+  {
+    id: "extras",
+    label: "Nâng cao",
+    title: "Yêu cầu nâng cao",
+    hint: "Không bắt buộc — nhưng giúp lọc creator tốt hơn.",
+    fields: ["minFollowers", "region", "creatorRequirements", "contentGuidelines"],
+  },
+];
 
 export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; draftId?: string }) {
   const navigate = useNavigate();
@@ -79,8 +113,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [publishedDraft, setPublishedDraft] = useState<CampaignDraft | null>(null);
-  const [advancedOpen, setAdvancedOpen] = useState(mode === "edit");
+  const [step, setStep] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+
 
   const sessionQuery = useQuery({ queryKey: ["brand-session"], queryFn: fetchSession });
   const draftQuery = useQuery({
@@ -157,6 +192,40 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
       return;
     }
     saveMutation.mutate();
+  };
+
+  const stepCompleted = STEPS.map((s) => s.fields.every((f) => !liveErrors[f]));
+  const isLastStep = step === STEPS.length - 1;
+
+  const goTo = (i: number) => {
+    setStep(Math.min(Math.max(i, 0), STEPS.length - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const next = () => {
+    const stepErrs: Errors = {};
+    for (const f of STEPS[step]!.fields) if (liveErrors[f]) stepErrs[f] = liveErrors[f];
+    if (Object.keys(stepErrs).length) {
+      setSubmitted(true);
+      setErrors(liveErrors);
+      toast.error("Vui lòng hoàn tất bước này trước khi tiếp tục");
+      focusFirstError(stepErrs);
+      return;
+    }
+    goTo(step + 1);
+  };
+
+  const tryPublish = () => {
+    setSubmitted(true);
+    setErrors(liveErrors);
+    if (Object.keys(liveErrors).length) {
+      toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
+      const firstBad = STEPS.findIndex((s) => s.fields.some((f) => liveErrors[f]));
+      if (firstBad >= 0) setStep(firstBad);
+      focusFirstError(liveErrors);
+      return;
+    }
+    setConfirmOpen(true);
   };
 
   // ---------------------------------------------------------------- states
@@ -240,10 +309,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
                 {mode === "create" ? "Tạo chiến dịch" : "Chỉnh sửa chiến dịch"}
               </h1>
               <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
-                {mode === "create"
-                  ? "Điền thông tin cơ bản để tạo bản nháp. Bạn có thể chỉnh sửa và xuất bản sau."
-                  : "Kiểm tra lại nội dung, lưu thay đổi và xuất bản khi chiến dịch đã sẵn sàng."}
+                {STEPS[step]!.hint}
               </p>
+
             </div>
             <div className="shrink-0 text-right">
               {savedAt ? (
@@ -267,8 +335,17 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               ) : null}
             </div>
           </div>
+          <div className="mt-6">
+            <Stepper
+              steps={STEPS.map((s) => ({ id: s.id, label: s.label }))}
+              current={step}
+              completed={stepCompleted}
+              onSelect={goTo}
+            />
+          </div>
         </div>
       </div>
+
 
       <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-8">
         <form ref={formRef} onSubmit={submit} noValidate className="space-y-6">
@@ -314,6 +391,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </div>
           ) : null}
 
+          {step === 0 ? (
           <SectionCard title="Ảnh bìa & thông tin cơ bản" description="Những thông tin creator nhìn thấy đầu tiên trên Discovery.">
             <FormField
               id="coverDataUrl"
@@ -416,7 +494,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               />
             </FormField>
           </SectionCard>
+          ) : null}
 
+          {step === 1 ? (
           <SectionCard title="Ngân sách & quy mô" description="Xác định chi phí và số lượng creator cần tuyển.">
             <div className="grid gap-5 sm:grid-cols-2">
               <FormField
@@ -466,7 +546,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               </FormField>
             </div>
           </SectionCard>
+          ) : null}
 
+          {step === 2 ? (
           <SectionCard title="Nội dung & mô tả" description="Mô tả càng rõ, creator gửi hồ sơ càng đúng nhu cầu.">
             <FormField
               id="deliverySummary"
@@ -502,30 +584,16 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               />
             </FormField>
           </SectionCard>
+          ) : null}
 
-          <section className="panel overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setAdvancedOpen((o) => !o)}
-              className="flex w-full items-center justify-between gap-3 p-5 text-left sm:p-6"
+
+          {step === 3 ? (
+            <SectionCard
+              title="Yêu cầu nâng cao"
+              description="Không bắt buộc — nhưng giúp bạn lọc creator phù hợp hơn."
             >
-              <span className="min-w-0">
-                <span className="block text-lg font-bold tracking-tight sm:text-xl">
-                  Yêu cầu nâng cao{" "}
-                  <span className="align-middle text-xs font-semibold text-muted-foreground">
-                    (không bắt buộc)
-                  </span>
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  Follower tối thiểu, khu vực, tags, dos & don’ts
-                </span>
-              </span>
-              <ChevronDown
-                className={cn("size-5 shrink-0 transition-transform", advancedOpen && "rotate-180")}
-              />
-            </button>
-            {advancedOpen ? (
-              <div className="space-y-5 border-t border-border p-5 sm:p-6">
+              <div className="space-y-5">
+
                 <div className="grid gap-5 sm:grid-cols-2">
                   <FormField
                     id="minFollowers"
@@ -616,46 +684,58 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
                   />
                 </FormField>
               </div>
-            ) : null}
-          </section>
+            </SectionCard>
+          ) : null}
+
 
           {/* Desktop actions */}
           <div className="hidden items-center justify-between gap-3 lg:flex">
-            <p className="text-xs text-muted-foreground">
-              {savedAt
-                ? `Cập nhật lần cuối ${new Date(savedAt).toLocaleString("vi-VN")}`
-                : "Bản nháp chưa được lưu"}
-            </p>
-            <div className="flex gap-2">
-              {mode === "edit" ? (
-                <PublishButton
-                  disabled={!canPublish || busy}
-                  loading={isPublishing}
-                  locked={!canPublish}
-                  onClick={() => {
-                    setSubmitted(true);
-                    setErrors(liveErrors);
-                    if (Object.keys(liveErrors).length) {
-                      toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
-                      focusFirstError(liveErrors);
-                      return;
-                    }
-                    setConfirmOpen(true);
-                  }}
-                />
+            <div className="flex items-center gap-3">
+              {step > 0 ? (
+                <Button type="button" variant="ghost" onClick={() => goTo(step - 1)}>
+                  <ArrowLeft className="size-4" /> Quay lại
+                </Button>
               ) : null}
-              <Button type="submit" size="lg" disabled={busy} className="min-w-44">
-                {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                {isSaving
-                  ? mode === "create"
-                    ? "Đang tạo…"
-                    : "Đang lưu…"
-                  : mode === "create"
-                    ? "Tạo chiến dịch"
-                    : "Lưu thay đổi"}
-              </Button>
+              <p className="text-xs text-muted-foreground">
+                {savedAt
+                  ? `Cập nhật lần cuối ${new Date(savedAt).toLocaleString("vi-VN")}`
+                  : "Bản nháp chưa được lưu"}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              {isLastStep ? (
+                <>
+                  {mode === "edit" ? (
+                    <PublishButton
+                      disabled={!canPublish || busy}
+                      loading={isPublishing}
+                      locked={!canPublish}
+                      onClick={tryPublish}
+                    />
+                  ) : null}
+                  <Button type="submit" size="lg" disabled={busy} className="min-w-44">
+                    {isSaving ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Save className="size-4" />
+                    )}
+                    {isSaving
+                      ? mode === "create"
+                        ? "Đang tạo…"
+                        : "Đang lưu…"
+                      : mode === "create"
+                        ? "Tạo chiến dịch"
+                        : "Lưu thay đổi"}
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" size="lg" onClick={next} className="min-w-44">
+                  Tiếp tục <ArrowRight className="size-4" />
+                </Button>
+              )}
             </div>
           </div>
+
         </form>
 
         <aside className="hidden lg:block">
@@ -673,36 +753,41 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
       {/* Mobile sticky CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 p-3 backdrop-blur lg:hidden">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
-          <Button
-            type="button"
-            size="lg"
-            disabled={busy}
-            onClick={() => formRef.current?.requestSubmit()}
-            className="w-full"
-          >
-            {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-            {mode === "create" ? "Tạo chiến dịch" : "Lưu thay đổi"}
-          </Button>
-          {mode === "edit" ? (
+          <div className="flex gap-2">
+            {step > 0 ? (
+              <Button type="button" size="lg" variant="outline" onClick={() => goTo(step - 1)}>
+                <ArrowLeft className="size-4" /> Quay lại
+              </Button>
+            ) : null}
+            {isLastStep ? (
+              <Button
+                type="button"
+                size="lg"
+                disabled={busy}
+                onClick={() => formRef.current?.requestSubmit()}
+                className="flex-1"
+              >
+                {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                {mode === "create" ? "Tạo chiến dịch" : "Lưu thay đổi"}
+              </Button>
+            ) : (
+              <Button type="button" size="lg" onClick={next} className="flex-1">
+                Tiếp tục <ArrowRight className="size-4" />
+              </Button>
+            )}
+          </div>
+          {isLastStep && mode === "edit" ? (
             <PublishButton
               full
               disabled={!canPublish || busy}
               loading={isPublishing}
               locked={!canPublish}
-              onClick={() => {
-                setSubmitted(true);
-                setErrors(liveErrors);
-                if (Object.keys(liveErrors).length) {
-                  toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
-                  focusFirstError(liveErrors);
-                  return;
-                }
-                setConfirmOpen(true);
-              }}
+              onClick={tryPublish}
             />
           ) : null}
         </div>
       </div>
+
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
