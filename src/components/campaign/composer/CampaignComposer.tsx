@@ -535,6 +535,8 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               />
             </FormField>
           </SectionCard>
+          ) : null}
+
 
           {step === 3 ? (
             <SectionCard
