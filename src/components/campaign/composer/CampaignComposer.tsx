@@ -499,6 +499,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
               </FormField>
             </div>
           </SectionCard>
+          ) : null}
 
           {step === 2 ? (
           <SectionCard title="Nội dung & mô tả" description="Mô tả càng rõ, creator gửi hồ sơ càng đúng nhu cầu.">
