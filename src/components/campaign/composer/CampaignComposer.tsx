@@ -706,36 +706,41 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
       {/* Mobile sticky CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 p-3 backdrop-blur lg:hidden">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
-          <Button
-            type="button"
-            size="lg"
-            disabled={busy}
-            onClick={() => formRef.current?.requestSubmit()}
-            className="w-full"
-          >
-            {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-            {mode === "create" ? "Tạo chiến dịch" : "Lưu thay đổi"}
-          </Button>
-          {mode === "edit" ? (
+          <div className="flex gap-2">
+            {step > 0 ? (
+              <Button type="button" size="lg" variant="outline" onClick={() => goTo(step - 1)}>
+                <ArrowLeft className="size-4" /> Quay lại
+              </Button>
+            ) : null}
+            {isLastStep ? (
+              <Button
+                type="button"
+                size="lg"
+                disabled={busy}
+                onClick={() => formRef.current?.requestSubmit()}
+                className="flex-1"
+              >
+                {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                {mode === "create" ? "Tạo chiến dịch" : "Lưu thay đổi"}
+              </Button>
+            ) : (
+              <Button type="button" size="lg" onClick={next} className="flex-1">
+                Tiếp tục <ArrowRight className="size-4" />
+              </Button>
+            )}
+          </div>
+          {isLastStep && mode === "edit" ? (
             <PublishButton
               full
               disabled={!canPublish || busy}
               loading={isPublishing}
               locked={!canPublish}
-              onClick={() => {
-                setSubmitted(true);
-                setErrors(liveErrors);
-                if (Object.keys(liveErrors).length) {
-                  toast.error("Hoàn tất các trường bắt buộc trước khi xuất bản");
-                  focusFirstError(liveErrors);
-                  return;
-                }
-                setConfirmOpen(true);
-              }}
+              onClick={tryPublish}
             />
           ) : null}
         </div>
       </div>
+
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
