@@ -373,23 +373,24 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </div>
           ) : null}
 
-          {submitted && Object.keys(shownErrors).length ? (
+          {submitted && Object.keys(stepShownErrors).length ? (
             <div className="panel border-destructive/40 bg-destructive/[0.05] p-4">
               <button
                 type="button"
-                onClick={() => focusFirstError(shownErrors)}
+                onClick={() => focusFirstError(stepShownErrors)}
                 className="flex w-full items-start gap-3 text-left"
               >
                 <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
                 <span className="text-sm">
                   <span className="font-bold text-destructive">
-                    Còn {Object.keys(shownErrors).length} trường cần sửa.
+                    Còn {Object.keys(stepShownErrors).length} trường cần sửa ở bước này.
                   </span>{" "}
                   <span className="text-muted-foreground">Bấm để tới trường lỗi đầu tiên.</span>
                 </span>
               </button>
             </div>
           ) : null}
+
 
           {step === 0 ? (
           <SectionCard title="Ảnh bìa & thông tin cơ bản" description="Những thông tin creator nhìn thấy đầu tiên trên Discovery.">
