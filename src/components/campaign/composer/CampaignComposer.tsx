@@ -196,6 +196,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
 
   const stepCompleted = STEPS.map((s) => s.fields.every((f) => !liveErrors[f]));
   const isLastStep = step === STEPS.length - 1;
+  const stepShownErrors: Errors = {};
+  for (const f of STEPS[step]!.fields) if (shownErrors[f]) stepShownErrors[f] = shownErrors[f];
+
 
   const goTo = (i: number) => {
     setStep(Math.min(Math.max(i, 0), STEPS.length - 1));
@@ -303,10 +306,10 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
           <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:items-center sm:justify-between">
             <div className="min-w-0">
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-                {mode === "create" ? "Bước 1 · Tạo bản nháp" : "Bước 2 · Hoàn thiện bản nháp"}
+                {mode === "create" ? "Tạo bản nháp" : "Hoàn thiện bản nháp"} · Bước {step + 1}/{STEPS.length}
               </p>
               <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
-                {mode === "create" ? "Tạo chiến dịch" : "Chỉnh sửa chiến dịch"}
+                {STEPS[step]!.title}
               </h1>
               <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
                 {STEPS[step]!.hint}
@@ -339,7 +342,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             <Stepper
               steps={STEPS.map((s) => ({ id: s.id, label: s.label }))}
               current={step}
-              completed={stepCompleted}
+              completed={stepCompleted.map((ok, i) => ok && i < step)}
               onSelect={goTo}
             />
           </div>
@@ -373,23 +376,24 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </div>
           ) : null}
 
-          {submitted && Object.keys(shownErrors).length ? (
+          {submitted && Object.keys(stepShownErrors).length ? (
             <div className="panel border-destructive/40 bg-destructive/[0.05] p-4">
               <button
                 type="button"
-                onClick={() => focusFirstError(shownErrors)}
+                onClick={() => focusFirstError(stepShownErrors)}
                 className="flex w-full items-start gap-3 text-left"
               >
                 <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
                 <span className="text-sm">
                   <span className="font-bold text-destructive">
-                    Còn {Object.keys(shownErrors).length} trường cần sửa.
+                    Còn {Object.keys(stepShownErrors).length} trường cần sửa ở bước này.
                   </span>{" "}
                   <span className="text-muted-foreground">Bấm để tới trường lỗi đầu tiên.</span>
                 </span>
               </button>
             </div>
           ) : null}
+
 
           {step === 0 ? (
           <SectionCard title="Ảnh bìa & thông tin cơ bản" description="Những thông tin creator nhìn thấy đầu tiên trên Discovery.">
