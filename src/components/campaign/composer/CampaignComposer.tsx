@@ -102,6 +102,13 @@ const STEPS: Array<{ id: string; label: string; title: string; hint: string; fie
     hint: "Không bắt buộc — nhưng giúp lọc creator tốt hơn.",
     fields: ["minFollowers", "region", "creatorRequirements", "contentGuidelines"],
   },
+  {
+    id: "review",
+    label: "Xác nhận",
+    title: "Xác nhận trước khi xuất bản",
+    hint: "Kiểm tra lại toàn bộ thông tin chiến dịch một lần cuối.",
+    fields: [],
+  },
 ];
 
 export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; draftId?: string }) {
