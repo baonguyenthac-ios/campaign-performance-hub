@@ -306,10 +306,10 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
           <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:items-center sm:justify-between">
             <div className="min-w-0">
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-                {mode === "create" ? "Bước 1 · Tạo bản nháp" : "Bước 2 · Hoàn thiện bản nháp"}
+                {mode === "create" ? "Tạo bản nháp" : "Hoàn thiện bản nháp"} · Bước {step + 1}/{STEPS.length}
               </p>
               <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
-                {mode === "create" ? "Tạo chiến dịch" : "Chỉnh sửa chiến dịch"}
+                {STEPS[step]!.title}
               </h1>
               <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
                 {STEPS[step]!.hint}
@@ -342,7 +342,7 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             <Stepper
               steps={STEPS.map((s) => ({ id: s.id, label: s.label }))}
               current={step}
-              completed={stepCompleted}
+              completed={stepCompleted.map((ok, i) => ok && i < step)}
               onSelect={goTo}
             />
           </div>
