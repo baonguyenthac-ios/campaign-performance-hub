@@ -196,6 +196,9 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
 
   const stepCompleted = STEPS.map((s) => s.fields.every((f) => !liveErrors[f]));
   const isLastStep = step === STEPS.length - 1;
+  const stepShownErrors: Errors = {};
+  for (const f of STEPS[step]!.fields) if (shownErrors[f]) stepShownErrors[f] = shownErrors[f];
+
 
   const goTo = (i: number) => {
     setStep(Math.min(Math.max(i, 0), STEPS.length - 1));
