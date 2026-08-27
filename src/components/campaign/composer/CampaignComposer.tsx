@@ -942,6 +942,48 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
   );
 }
 
+function ReviewSection({
+  title,
+  onEdit,
+  children,
+}: {
+  title: string;
+  onEdit: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="panel overflow-hidden">
+      <header className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+        <h2 className="text-sm font-bold">{title}</h2>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-input px-3 py-1 text-xs font-bold text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+        >
+          <Pencil className="size-3" /> Chỉnh sửa
+        </button>
+      </header>
+      <div className="space-y-4 p-5">{children}</div>
+    </section>
+  );
+}
+
+function ReviewRow({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+  return (
+    <div className="grid grid-cols-[140px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[200px_minmax(0,1fr)]">
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p
+        className={cn(
+          "whitespace-pre-wrap break-words text-sm",
+          strong ? "num text-base font-bold text-primary" : "font-medium",
+        )}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
 function PublishButton({
   disabled,
   loading,
