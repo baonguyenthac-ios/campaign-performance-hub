@@ -699,6 +699,125 @@ export function CampaignComposer({ mode, draftId }: { mode: "create" | "edit"; d
             </SectionCard>
           ) : null}
 
+          {step === 4 ? (
+            <div className="space-y-5">
+              <ReviewSection title="Ảnh bìa & thông tin cơ bản" onEdit={() => goTo(0)}>
+                {draft.coverDataUrl ? (
+                  <img
+                    src={draft.coverDataUrl}
+                    alt="Ảnh bìa chiến dịch"
+                    className="aspect-[4/3] w-full max-w-md rounded-2xl border border-border object-cover"
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">Chưa có ảnh bìa</p>
+                )}
+                <ReviewRow label="Tên chiến dịch" value={draft.name.trim() || "—"} />
+                <ReviewRow label="Ngành hàng" value={draft.category || "—"} />
+                <ReviewRow label="Hạn nhận hồ sơ" value={formatDate(draft.deadline)} />
+                <ReviewRow
+                  label="Nền tảng"
+                  value={
+                    draft.platforms.length
+                      ? draft.platforms
+                          .map((p) => PLATFORMS.find((x) => x.id === p)?.label ?? p)
+                          .join(", ")
+                      : "—"
+                  }
+                />
+              </ReviewSection>
+
+              <ReviewSection title="Ngân sách & quy mô" onEdit={() => goTo(1)}>
+                <ReviewRow label="Ngân sách" value={vnd(draft.budget)} strong />
+                <ReviewRow label="Số creator cần chọn" value={`${draft.creatorCount} creator`} />
+              </ReviewSection>
+
+              <ReviewSection title="Nội dung & mô tả" onEdit={() => goTo(2)}>
+                <ReviewRow label="Tóm tắt bàn giao" value={draft.deliverySummary.trim() || "—"} />
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Mô tả chiến dịch
+                  </p>
+                  {richTextLength(draft.description) ? (
+                    <div
+                      className="prose prose-sm mt-2 max-w-none rounded-2xl border border-border bg-surface-2 p-4 text-foreground"
+                      dangerouslySetInnerHTML={{ __html: draft.description }}
+                    />
+                  ) : (
+                    <p className="mt-2 text-sm text-muted-foreground">—</p>
+                  )}
+                </div>
+              </ReviewSection>
+
+              <ReviewSection title="Yêu cầu nâng cao" onEdit={() => goTo(3)}>
+                <ReviewRow
+                  label="Số follower tối thiểu"
+                  value={
+                    draft.minFollowers !== null
+                      ? new Intl.NumberFormat("vi-VN").format(draft.minFollowers)
+                      : "Không yêu cầu"
+                  }
+                />
+                <ReviewRow label="Khu vực" value={draft.region} />
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Tags
+                  </p>
+                  {draft.tags.length ? (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {draft.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold"
+                        >
+                          #{t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-muted-foreground">—</p>
+                  )}
+                </div>
+                <ReviewRow
+                  label="Yêu cầu thêm với creator"
+                  value={draft.creatorRequirements.trim() || "—"}
+                />
+                <ReviewRow
+                  label="Yêu cầu nội dung chi tiết"
+                  value={draft.contentGuidelines.trim() || "—"}
+                />
+              </ReviewSection>
+
+              {Object.keys(liveErrors).length ? (
+                <div className="panel border-destructive/40 bg-destructive/[0.05] p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
+                    <p className="text-sm">
+                      <span className="font-bold text-destructive">
+                        Còn {Object.keys(liveErrors).length} trường chưa hợp lệ.
+                      </span>{" "}
+                      <span className="text-muted-foreground">
+                        Quay lại các bước trên để hoàn tất trước khi lưu hoặc xuất bản.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="panel border-success/40 bg-success/[0.06] p-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" />
+                    <p className="text-sm">
+                      <span className="font-bold text-success">Mọi thứ đã sẵn sàng.</span>{" "}
+                      <span className="text-muted-foreground">
+                        Bạn có thể {mode === "create" ? "tạo chiến dịch" : "lưu thay đổi"} hoặc
+                        xuất bản ngay lên Discovery.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : null}
+
 
           {/* Desktop actions */}
           <div className="hidden items-center justify-between gap-3 lg:flex">
