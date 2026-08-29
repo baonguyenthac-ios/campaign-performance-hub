@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
 import { Route as CampaignNewRouteImport } from './routes/campaign.new'
+import { Route as CampaignIdApplyRouteImport } from './routes/campaign.$id.apply'
 import { Route as CampaignIdEditRouteImport } from './routes/campaign_.$id.edit'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const CampaignNewRoute = CampaignNewRouteImport.update({
   path: '/campaign/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampaignIdApplyRoute = CampaignIdApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
+  getParentRoute: () => CampaignIdRoute,
+} as any)
 const CampaignIdEditRoute = CampaignIdEditRouteImport.update({
   id: '/campaign_/$id/edit',
   path: '/campaign/$id/edit',
@@ -37,35 +43,53 @@ const CampaignIdEditRoute = CampaignIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/$id': typeof CampaignIdRouteWithChildren
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign/$id/apply': typeof CampaignIdApplyRoute
   '/campaign/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/$id': typeof CampaignIdRouteWithChildren
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign/$id/apply': typeof CampaignIdApplyRoute
   '/campaign/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/campaign/$id': typeof CampaignIdRoute
+  '/campaign/$id': typeof CampaignIdRouteWithChildren
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign/$id/apply': typeof CampaignIdApplyRoute
   '/campaign_/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/campaign/$id' | '/campaign/new' | '/campaign/$id/edit'
+  fullPaths:
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign/$id/apply'
+    | '/campaign/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/campaign/$id' | '/campaign/new' | '/campaign/$id/edit'
+  to:
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign/$id/apply'
+    | '/campaign/$id/edit'
   id:
-    '__root__' | '/' | '/campaign/$id' | '/campaign/new' | '/campaign_/$id/edit'
+    | '__root__'
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign/$id/apply'
+    | '/campaign_/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CampaignIdRoute: typeof CampaignIdRoute
+  CampaignIdRoute: typeof CampaignIdRouteWithChildren
   CampaignNewRoute: typeof CampaignNewRoute
   CampaignIdEditRoute: typeof CampaignIdEditRoute
 }
@@ -93,6 +117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaign/$id/apply': {
+      id: '/campaign/$id/apply'
+      path: '/apply'
+      fullPath: '/campaign/$id/apply'
+      preLoaderRoute: typeof CampaignIdApplyRouteImport
+      parentRoute: typeof CampaignIdRoute
+    }
     '/campaign_/$id/edit': {
       id: '/campaign_/$id/edit'
       path: '/campaign/$id/edit'
@@ -103,9 +134,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface CampaignIdRouteChildren {
+  CampaignIdApplyRoute: typeof CampaignIdApplyRoute
+}
+
+const CampaignIdRouteChildren: CampaignIdRouteChildren = {
+  CampaignIdApplyRoute: CampaignIdApplyRoute,
+}
+
+const CampaignIdRouteWithChildren = CampaignIdRoute._addFileChildren(
+  CampaignIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CampaignIdRoute: CampaignIdRoute,
+  CampaignIdRoute: CampaignIdRouteWithChildren,
   CampaignNewRoute: CampaignNewRoute,
   CampaignIdEditRoute: CampaignIdEditRoute,
 }

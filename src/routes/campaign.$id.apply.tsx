@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/campaign/$id/apply")({
   head: ({ params }) => {
-    const gig = gigs.find((g) => g.id === params.id) ?? gigs[0];
+    const gig = gigs.find((g) => g.id === params.id) ?? gigs[0]!;
     const title = `${gig.name} · Ứng tuyển chiến dịch`;
     const description = `${gig.brandName} tuyển creator ${gig.category}: ${gig.slotsLeft}/${gig.slotsTotal} slot còn lại, hạn ${gig.deadline}. Ngân sách ${gig.budget ? currency(gig.budget) : "thỏa thuận"}.`;
     return {
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/campaign/$id/apply")({
 
 function CampaignApplyPage() {
   const { id } = Route.useParams();
-  const gig = gigs.find((g) => g.id === id) ?? gigs[0];
+  const gig = gigs.find((g) => g.id === id) ?? gigs[0]!;
   const [state, setState] = useState<ApplyState>("eligible");
 
   const slotPct = ((gig.slotsTotal - gig.slotsLeft) / gig.slotsTotal) * 100;
