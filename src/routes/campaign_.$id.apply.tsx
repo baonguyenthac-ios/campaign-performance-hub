@@ -16,6 +16,7 @@ import {
 
 import { ApplyPanel } from "@/components/campaign/ApplyPanel";
 import { Button } from "@/components/ui/button";
+import coverAurora from "@/assets/cover-aurora.jpg";
 import {
   applyStates,
   currency,
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/campaign_/$id/apply")({
 
 function CampaignApplyPage() {
   const { id } = Route.useParams();
-  const gig = gigs.find((g) => g.id === id) ?? gigs[0]!;
+  const gig = { ...(gigs.find((g) => g.id === id) ?? gigs[0]!), cover: coverAurora };
   const [state, setState] = useState<ApplyState>("eligible");
 
   const slotPct = ((gig.slotsTotal - gig.slotsLeft) / gig.slotsTotal) * 100;
