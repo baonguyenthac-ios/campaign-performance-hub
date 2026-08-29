@@ -72,7 +72,13 @@ function CampaignApplyPage() {
         {/* Cover */}
         <div className="relative mt-4 aspect-[21/9] w-full overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-3xl">
           {gig.cover ? (
-            <img src={gig.cover} alt={`Ảnh bìa chiến dịch ${gig.name}`} className="h-full w-full object-cover" />
+            <img
+              src={gig.cover}
+              alt={`Ảnh bìa chiến dịch ${gig.name}`}
+              width={1680}
+              height={720}
+              className="h-full w-full object-cover"
+            />
           ) : (
             <div className="hero-glow flex h-full w-full flex-col items-center justify-center gap-3 text-muted-foreground">
               <span className="grid size-16 place-items-center rounded-2xl border border-border bg-surface">
