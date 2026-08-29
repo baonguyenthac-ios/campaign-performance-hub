@@ -26,7 +26,7 @@ import {
 } from "@/lib/campaign-gig";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/campaign/$id/apply")({
+export const Route = createFileRoute("/campaign_/$id/apply")({
   head: ({ params }) => {
     const gig = gigs.find((g) => g.id === params.id) ?? gigs[0]!;
     const title = `${gig.name} · Ứng tuyển chiến dịch`;
