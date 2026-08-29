@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
 import { Route as CampaignNewRouteImport } from './routes/campaign.new'
+import { Route as CampaignIdApplyRouteImport } from './routes/campaign_.$id.apply'
 import { Route as CampaignIdEditRouteImport } from './routes/campaign_.$id.edit'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const CampaignNewRoute = CampaignNewRouteImport.update({
   path: '/campaign/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampaignIdApplyRoute = CampaignIdApplyRouteImport.update({
+  id: '/campaign_/$id/apply',
+  path: '/campaign/$id/apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampaignIdEditRoute = CampaignIdEditRouteImport.update({
   id: '/campaign_/$id/edit',
   path: '/campaign/$id/edit',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign/$id/apply': typeof CampaignIdApplyRoute
   '/campaign/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign/$id/apply': typeof CampaignIdApplyRoute
   '/campaign/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRoutesById {
@@ -52,21 +60,38 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/campaign/$id': typeof CampaignIdRoute
   '/campaign/new': typeof CampaignNewRoute
+  '/campaign_/$id/apply': typeof CampaignIdApplyRoute
   '/campaign_/$id/edit': typeof CampaignIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/campaign/$id' | '/campaign/new' | '/campaign/$id/edit'
+  fullPaths:
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign/$id/apply'
+    | '/campaign/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/campaign/$id' | '/campaign/new' | '/campaign/$id/edit'
+  to:
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign/$id/apply'
+    | '/campaign/$id/edit'
   id:
-    '__root__' | '/' | '/campaign/$id' | '/campaign/new' | '/campaign_/$id/edit'
+    | '__root__'
+    | '/'
+    | '/campaign/$id'
+    | '/campaign/new'
+    | '/campaign_/$id/apply'
+    | '/campaign_/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CampaignIdRoute: typeof CampaignIdRoute
   CampaignNewRoute: typeof CampaignNewRoute
+  CampaignIdApplyRoute: typeof CampaignIdApplyRoute
   CampaignIdEditRoute: typeof CampaignIdEditRoute
 }
 
@@ -93,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaign_/$id/apply': {
+      id: '/campaign_/$id/apply'
+      path: '/campaign/$id/apply'
+      fullPath: '/campaign/$id/apply'
+      preLoaderRoute: typeof CampaignIdApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campaign_/$id/edit': {
       id: '/campaign_/$id/edit'
       path: '/campaign/$id/edit'
@@ -107,6 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignIdRoute: CampaignIdRoute,
   CampaignNewRoute: CampaignNewRoute,
+  CampaignIdApplyRoute: CampaignIdApplyRoute,
   CampaignIdEditRoute: CampaignIdEditRoute,
 }
 export const routeTree = rootRouteImport
